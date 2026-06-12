@@ -193,6 +193,22 @@ lemma isStandardSmoothOfRelativeDimension_stableUnderCompositionWithLocalization
       IsStandardSmoothOfRelativeDimension.algebraMap_isLocalizationAway s
     zero_add n ▸ IsStandardSmoothOfRelativeDimension.comp this hf
 
+private lemma pderiv_sumAlgEquiv {R S₁ S₂ : Type*} [CommSemiring R]
+    (b : S₁) (p : MvPolynomial (S₁ ⊕ S₂) R) :
+    MvPolynomial.pderiv b (MvPolynomial.sumAlgEquiv R S₁ S₂ p) =
+      MvPolynomial.sumAlgEquiv R S₁ S₂ (MvPolynomial.pderiv (Sum.inl b) p) := by
+  classical
+  induction p using MvPolynomial.induction_on with
+  | C a => simp [MvPolynomial.sumAlgEquiv_C_inl]
+  | add p q hp hq => simp [hp, hq]
+  | mul_X p i hp => cases i <;> simp [MvPolynomial.sumAlgEquiv_X_inl,
+      MvPolynomial.sumAlgEquiv_X_inr, hp, MvPolynomial.pderiv_X, Pi.single_apply, apply_ite]
+
+private lemma sumAlgEquiv_symm_C_C {R S₁ S₂ : Type*} [CommSemiring R] (r : R) :
+    (MvPolynomial.sumAlgEquiv R S₁ S₂).symm (MvPolynomial.C (MvPolynomial.C r)) =
+      MvPolynomial.C r := (MvPolynomial.sumAlgEquiv R S₁ S₂).symm_apply_eq.mpr
+    (MvPolynomial.sumAlgEquiv_C_inl (R := R) (S₁ := S₁) (S₂ := S₂) r).symm
+
 set_option backward.isDefEq.respectTransparency false in
 variable (R S) in
 /-- Every standard smooth homomorphism `R → S` factors into `R -> R[X₁,...,Xₙ] → S`
@@ -218,7 +234,7 @@ theorem _root_.Algebra.IsStandardSmoothOfRelativeDimension.exists_etale_mvPolyno
   have H : (MvPolynomial.aeval fun x ↦ (algebraMap P.Ring S) (e (MvPolynomial.X x))).toRingHom =
       (algebraMap P.Ring S).comp e.toRingHom := by
     ext
-    · simp [e, IsScalarTower.algebraMap_eq R (MvPolynomial (Fin n) R) S]
+    · simp [e, sumAlgEquiv_symm_C_C, IsScalarTower.algebraMap_eq R (MvPolynomial (Fin n) R) S]
     · simp [e, @RingHom.algebraMap_toAlgebra (MvPolynomial (Fin n) R) S, φ]
     · simp [e]
   let P' : Algebra.PreSubmersivePresentation (MvPolynomial (Fin n) R) S σ σ :=
@@ -244,7 +260,7 @@ theorem _root_.Algebra.IsStandardSmoothOfRelativeDimension.exists_etale_mvPolyno
           Algebra.Generators.ofSurjective] using congr($H _)
       suffices e ((e.symm (P.relation j)).pderiv i) = (P.relation j).pderiv (P.map i) by
         simp [Algebra.PreSubmersivePresentation.jacobiMatrix_apply, this]
-      simp [e, MvPolynomial.pderiv_sumToIter, ← MvPolynomial.pderiv_rename e₀.injective,
+      simp [e, pderiv_sumAlgEquiv, ← MvPolynomial.pderiv_rename e₀.injective,
         show e₀ (Sum.inl i) = P.map i from rfl] }
   exact etale_algebraMap.mpr (Algebra.Etale.iff_isStandardSmoothOfRelativeDimension_zero.mpr
     ⟨_, _, _, inferInstance, P', by simp [Algebra.Presentation.dimension]⟩)

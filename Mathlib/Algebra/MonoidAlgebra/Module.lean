@@ -83,7 +83,7 @@ def mapDomainLinearMap (f : M → N) : S[M] →ₗ[R] S[N] :=
 lemma coeff_mapDomainLinearMap (f : M → N) (x : S[M]) :
     (mapDomainLinearMap R S f x).coeff = x.coeff.mapDomain f := rfl
 
-@[to_additive (attr := simp)]
+@[to_additive]
 lemma mapDomainLinearMap_single (f : M → N) (s : S) (m : M) :
     mapDomainLinearMap R S f (single m s) = single (f m) s := by simp [mapDomainLinearMap]
 
@@ -93,7 +93,7 @@ lemma mapDomainLinearMap_comp (f : M → N) (g : N → O) :
   ext; simp [Finsupp.mapDomain_comp]
 
 variable (R S) in
-@[to_additive (attr := simps! apply symm_apply)]
+@[to_additive (attr := simps! apply)]
 def mapDomainLinearEquiv (e : M ≃ N) : S[M] ≃ₗ[R] S[N] :=
   (coeffLinearEquiv _).trans <| (Finsupp.domLCongr e).trans <| (coeffLinearEquiv _).symm
 
@@ -101,7 +101,7 @@ def mapDomainLinearEquiv (e : M ≃ N) : S[M] ≃ₗ[R] S[N] :=
 lemma coeff_mapDomainLinearEquiv (e : M ≃ N) (x : S[M]) :
     (mapDomainLinearEquiv R S e x).coeff = equivMapDomain e x.coeff := rfl
 
-@[to_additive (attr := simp)]
+@[to_additive]
 lemma mapDomainLinearEquiv_single (e : M ≃ N) (s : S) (m : M) :
     mapDomainLinearEquiv R S e (single m s) = single (e m) s := by simp [mapDomainLinearEquiv]
 
