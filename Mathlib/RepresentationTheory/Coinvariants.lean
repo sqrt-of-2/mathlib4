@@ -272,7 +272,7 @@ noncomputable def ofCoinvariantsTprodLeftRegular :
 
 @[simp]
 lemma ofCoinvariantsTprodLeftRegular_mk_tmul_single (x : V) (g : G) (r : k) :
-    ofCoinvariantsTprodLeftRegular ρ (Coinvariants.mk _ (x ⊗ₜ Finsupp.single g r)) = r • ρ g⁻¹ x :=
+    ofCoinvariantsTprodLeftRegular ρ (Coinvariants.mk _ (x ⊗ₜ .single g r)) = r • ρ g⁻¹ x :=
   congr($(Finsupp.linearCombination_single k (v := fun g => ρ g⁻¹) r g) x)
 
 /-- Given a `k`-linear `G`-representation `(V, ρ)`, this is the linear equivalence
@@ -470,7 +470,7 @@ set_option backward.isDefEq.respectTransparency false in
 @[simp]
 lemma coinvariantsTensorFreeToFinsupp_mk_tmul_single (x : A) (i : α) (g : G) (r : k) :
     DFunLike.coe (F := (A.ρ.tprod (Representation.free k G α)).Coinvariants →ₗ[k] α →₀ A.V)
-      (coinvariantsTensorFreeToFinsupp A α) (Coinvariants.mk _ (x ⊗ₜ single i (single g r))) =
+      (coinvariantsTensorFreeToFinsupp A α) (Coinvariants.mk _ (x ⊗ₜ single i (.single g r))) =
       single i (r • A.ρ g⁻¹ x) := by
   simp [coinvariantsTensorFreeToFinsupp, Representation.finsuppTensorRight]
 
@@ -492,7 +492,7 @@ set_option backward.isDefEq.respectTransparency false in
 lemma finsuppToCoinvariantsTensorFree_single (i : α) (x : A) :
     DFunLike.coe (F := (α →₀ A.V) →ₗ[k] (A.ρ.tprod (Representation.free k G α)).Coinvariants)
       (finsuppToCoinvariantsTensorFree A α) (single i x) =
-      Coinvariants.mk _ (x ⊗ₜ single i (single (1 : G) (1 : k))) := by
+      Coinvariants.mk _ (x ⊗ₜ single i (.single (1 : G) (1 : k))) := by
   simp [finsuppToCoinvariantsTensorFree, Representation.finsuppTensorRight, Equiv.mk_symm]
 
 variable (A α)
